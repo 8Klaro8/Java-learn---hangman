@@ -5,18 +5,18 @@ import java.util.Scanner;
 
 public class Hangman {
 
-    // public static String[] words = {"ant", "baboon", "badger", "bat", "bear",
-    // "beaver", "camel",
-    // "cat", "clam", "cobra", "cougar", "coyote", "crow", "deer",
-    // "dog", "donkey", "duck", "eagle", "ferret", "fox", "frog", "goat",
-    // "goose", "hawk", "lion", "lizard", "llama", "mole", "monkey", "moose",
-    // "mouse", "mule", "newt", "otter", "owl", "panda", "parrot", "pigeon",
-    // "python", "rabbit", "ram", "rat", "raven","rhino", "salmon", "seal",
-    // "shark", "sheep", "skunk", "sloth", "snake", "spider", "stork", "swan",
-    // "tiger", "toad", "trout", "turkey", "turtle", "weasel", "whale", "wolf",
-    // "wombat", "zebra"};
+    public static String[] words = {"ant", "baboon", "badger", "bat", "bear",
+    "beaver", "camel",
+    "cat", "clam", "cobra", "cougar", "coyote", "crow", "deer",
+    "dog", "donkey", "duck", "eagle", "ferret", "fox", "frog", "goat",
+    "goose", "hawk", "lion", "lizard", "llama", "mole", "monkey", "moose",
+    "mouse", "mule", "newt", "otter", "owl", "panda", "parrot", "pigeon",
+    "python", "rabbit", "ram", "rat", "raven","rhino", "salmon", "seal",
+    "shark", "sheep", "skunk", "sloth", "snake", "spider", "stork", "swan",
+    "tiger", "toad", "trout", "turkey", "turtle", "weasel", "whale", "wolf",
+    "wombat", "zebra"};
 
-    public static String[] words = { "ant" };
+    // public static String[] words = { "ant" };
 
     public static String[] gallows = { "+---+\n" +
             "|   |\n" +
@@ -84,9 +84,16 @@ public class Hangman {
         // Estabilishing scanner
         Scanner scan = new Scanner(System.in);
 
+        // Choose a random word
+        Random rand = new Random();
+        int indexOfRandomWord = rand.nextInt(words.length);
+        String randomWord = words[indexOfRandomWord];
+
+        System.out.println("Random word: " + randomWord);
+
         // Creating table -------------------------------
         List<String> myTable = new ArrayList();
-        for (int i = 0; i < words[0].length(); i++) {
+        for (int i = 0; i < randomWord.length(); i++) {
             myTable.add("_");
         }
 
@@ -94,22 +101,24 @@ public class Hangman {
         printTable(myTable);
 
         // Ask user to guess
-        guessMethod(scan, myTable, myLife, gallows, hangManCounter);
+        guessMethod(scan, myTable, myLife, gallows, hangManCounter, randomWord);
 
     }
 
     // Ask user to guess
-    private static void guessMethod(Scanner scan, List<String> myTable, int myLife, String[] gallows, int hangManCounter) {
+    private static void guessMethod(Scanner scan, List<String> myTable, int myLife, String[] gallows, int hangManCounter, String randomWord) {
         resetStats(myLife, hangManCounter);
         System.out.println("Guess: ");
         String userGuess = scan.nextLine();
 
         // Checking if user guess (letter) is in the word
         try {
+            // TODO: reveal all occurances of the guessed letter
+
             // Get the index of the guessed letter from word
-            int indexOfGuess = words[0].indexOf(userGuess);
+            int indexOfGuess = randomWord.indexOf(userGuess);
             // return the letter using the index
-            char guessedLetter = words[0].charAt(indexOfGuess);
+            char guessedLetter = randomWord.charAt(indexOfGuess);
             // transform char to string
             String guessedLetterString = String.valueOf(guessedLetter);
 
@@ -124,15 +133,18 @@ public class Hangman {
                 askToPlayMore(scan, myTable, myLife, gallows, hangManCounter);
             }
 
-            guessMethod(scan, myTable, myLife, gallows, hangManCounter);
+            // If correct letter found then rerun the method to ask an other letter
+            guessMethod(scan, myTable, myLife, gallows, hangManCounter, randomWord);
             
 
         } catch (Exception e) {
             myLife--;
             hangManCounter++;
+
+            // print life left
             System.out.println("You have " + myLife + " life left.");
 
-            // TODO: print out current hangman
+            // print the adequate hangman ascii
             System.out.println(gallows[hangManCounter]);
 
             // Check if lost
@@ -141,7 +153,7 @@ public class Hangman {
                 askToPlayMore(scan, myTable, myLife, gallows, hangManCounter);
             }
             else{
-                guessMethod(scan, myTable, myLife, gallows, hangManCounter);
+                guessMethod(scan, myTable, myLife, gallows, hangManCounter, randomWord);
             }
 
 
@@ -153,7 +165,9 @@ public class Hangman {
         System.out.println("Play one more? (y/n)");
         String playMore = scan.nextLine();
         if (playMore.equals("y")){
-            guessMethod(scan, myTable, myLife, gallows, hangManCounter);
+
+            // Calling main to reset stats - 'myLife', 'hangManCounter'
+            main(new String[1]);
         }
         else if (playMore.equals("n")){
             System.out.println("Good Bye!!!");
