@@ -113,9 +113,9 @@ public class Hangman {
 
         // Checking if user guess (letter) is in the word
         try {
-            // TODO: reveal all occurances of the guessed letter
+            // TODO: reveal all occurances of the guessed letter - tip - use 'contains' method.
 
-            // Get the index of the guessed letter from word
+            // Get the index of the guessed letter from word as long as it contains the given character - letter
             int indexOfGuess = randomWord.indexOf(userGuess);
             // return the letter using the index
             char guessedLetter = randomWord.charAt(indexOfGuess);
