@@ -132,7 +132,7 @@ public class Hangman {
                 System.out.println("You won!");
                 askToPlayMore(scan, myTable, myLife, gallows, hangManCounter);
             }
-
+//
             // If correct letter found then rerun the method to ask an other letter
             guessMethod(scan, myTable, myLife, gallows, hangManCounter, randomWord);
             
